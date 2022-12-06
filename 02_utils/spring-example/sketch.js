@@ -13,11 +13,13 @@ function setup() {
 function draw() {
 
 	// set the spring target
-	if (mouseIsPressed)
-		spring.target = 200
-	else
-		spring.target = -200
+	// if (mouseIsPressed)
+	// 	spring.target = 200
+	// else
+	// 	spring.target = -200
 
+
+	spring.target = mouseIsPressed ? 200 : -200
 
 	// update the spring (make it move)
 	spring.step(deltaTime / 1000) // deltaTime is in milliseconds, we need it in seconds
