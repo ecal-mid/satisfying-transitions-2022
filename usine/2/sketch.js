@@ -348,11 +348,15 @@ function changeState(newState) {
 function pistonEnded() {
   endedPistons++;
   if (endedPistons === Object.values(pistons).length) {
+
+    setTimeout(() => {
+      changeState(states.RECT);
+    }, 1000);
     // console.log('ENDED');
     // setTimeout(() => {
     //   changeState(states.RECT);
     // }, 500);
 
-    changeState(states.RECT);
+    // changeState(states.RECT);
   }
 }
