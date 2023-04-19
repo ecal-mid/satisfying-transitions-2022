@@ -1,0 +1,4 @@
+- **Usine** by ECAL/Livia Schmid, Elena Biasi & Quentin Kohler [link](./usine)
+- **Diet** by ECAL/Valère Zen-Ruffinen, Baptiste Godart & Thomas Gaudin [link](./diet)
+- **Coolors** by ECAL/Mathias Liniger & Olivia Capol [link](./coolors)
+- **Connection** by ECAL/Aryana Noorani & Emilie Maier [link](./connection)
