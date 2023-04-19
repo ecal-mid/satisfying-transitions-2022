@@ -46,11 +46,11 @@ window.onresize = () => {
 
 
     // contain
-    if (wRatio < ratio) {
+    // if (wRatio < ratio) {
         scaleRatio = wHeight / height
-    } else {
-        scaleRatio = wWidth / width
-    }
+    // } else {
+        // scaleRatio = wWidth / width
+    // }
 
     document.documentElement.style.setProperty("--ratio", scaleRatio * 1)
 }
