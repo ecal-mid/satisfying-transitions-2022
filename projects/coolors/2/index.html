@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+    <script src="../audioworklet-polyfill.js"></script>
+    <script src="libraries/easing.js"></script>
+    <script src="WaterDrop.js"></script>
+  </head>
+
+  <body>
+    <script src="sketch.js"></script>
+
+    <svg style="display: none">
+      <filter id="metaball" width="400%" x="-150%" height="400%" y="-150%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0
+                                                     0 1 0 0 0
+                                                     0 0 1 0 0
+                                                     0 0 0 255 -153"
+        />
+      </filter>
+    </svg>
+  </body>
+</html>
