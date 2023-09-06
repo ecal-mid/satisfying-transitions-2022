@@ -12,6 +12,8 @@ let smoothSize = 0;
 let slurpSound;
 let whooshSound;
 
+let grabbedCircle
+
 function preload() {
   slurpSound = loadSound('./slurp-sound.mp3');
   whooshSound = loadSound('./whoosh-sound.wav');
@@ -75,6 +77,11 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
+function mouseMoved() {
+  if(grabbedCircle?.dragging) return
+  grabbedCircle = [circle1, circle2, circle3].find((circle) => circle.collides())
+}
+
 function draw() {
   background(0);
   fill("#0037FF");
@@ -121,6 +128,16 @@ function draw() {
   circle(posCirc3, centerY, size);
   circle(posCirc3 + posCirc4, centerY, size);
 
+  if(grabbedCircle) {
+    if(grabbedCircle.dragging) {
+      cursor('grabbing')
+    } else {
+      cursor('grab')
+    }
+  } else {
+    cursor('default')
+  }
+
 }
 
 function mousePressed() {
@@ -134,6 +151,8 @@ function mouseReleased() {
   circle1.released();
   circle2.released();
   circle3.released();
+
+  grabbedCircle = null
 }
 
 let reachedCircles = 0;

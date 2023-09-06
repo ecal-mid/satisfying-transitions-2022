@@ -82,7 +82,7 @@ const ballEase = new Easing({
 });
 
 const startEase = new Easing({
-  from: 0,
+  from: 0.00000001,
   to: 1,
   duration: 1000,
 });
@@ -199,9 +199,15 @@ function setup() {
 
   pop();
 
-  startEase.start();
+  window.addEventListener("message", (e) => {
+
+    if (e.data === "start") {
+      startEase.start();
+    }
+  });
   //stroke
 }
+
 
 function changeState(state) {
   currState = state;
@@ -218,12 +224,13 @@ function changeState(state) {
       break;
     case states.BALLS:
       ballEase.start();
-
       apples.forEach((e) => {
         e.changeState(pStates.ALIGN);
       });
 
       ballEase.onEnd = () => {
+        noLoop();
+        window.parent.postMessage("finished", "*");
         // console.log("END");
       };
 
@@ -298,6 +305,8 @@ function applyZoom() {
 }
 
 function draw() {
+  // const isVisible = window.frameElement?.className === "selected";
+  // if(!isVisible) return clear();
   clear();
   stroke(255);
   noFill();
@@ -311,33 +320,32 @@ function draw() {
   // ellipse(objSize, 0, bigDiam);
 
   // return;
-
   let thickness = lerp(1 - 0.1, 0, doneEase.value);
   strokeWeight(thickness);
-
+  
   // const p = getProgress(3,0);
   // progress = p;
-
+  
   // fill(215, 64, 67);
   // stroke(215, 64, 67);
   // ellipse(width / 1.05, height / 3, 30);
-
+  
   // fill(155, 187, 91);
   // stroke(155, 187, 91);
   // ellipse(width / 2.9, height / 10, 30);
-
+  
   // fill(90, 54, 133);
   // stroke(90, 54, 133);
   // ellipse(width / 6.9, height / 1.25, 30);
-
+  
   // fill(73, 166, 217);
   // stroke(73, 166, 217);
   // ellipse(width / 1.55, height / 1.5, 30);
-
+  
   // fill(247, 207, 106);
   // stroke(247, 207, 106);
   // ellipse(width / 4, height / 2, 30);
-
+  
   // console.log(cRadius);
   //const isPointInPath = drawingContext.isPointInPath(circle, event.offsetX, event.offsetY);
 
@@ -349,7 +357,8 @@ function draw() {
   // const cRadius = 0.3
 
   // console.log(progress);
-  apples.forEach((apple) => apple.draw());
+  
+  
 
   direction = getAngle(progress);
 
@@ -375,6 +384,8 @@ function draw() {
   const c = drawingContext;
 
   const firstPos = path[0];
+
+  apples.forEach((apple) => apple.draw());
   c.beginPath();
 
   c.moveTo(firstPos.x, firstPos.y);
@@ -389,11 +400,10 @@ function draw() {
   c.stroke();
 
   setLineDash();
-
   c.lineWidth = thickness * startEase.value;
   if(startEase.value >= 1) {
 
-    if (startEase) {
+    if (startEase && currState === states.PLAYING) {
       c.globalCompositeOperation = "destination-in";
       c.strokeStyle = "rgba(0, 0, 0, 1)";
       c.stroke();
@@ -402,6 +412,7 @@ function draw() {
   c.globalCompositeOperation = "source-over";
   c.strokeStyle = "rgba(0, 0, 0, 0.01)";
   c.stroke();
+
 
   const isPointInPath = c.isPointInStroke(
     mouseX * pixelDensity(),
@@ -412,6 +423,7 @@ function draw() {
   if (isPointInPath) fill("red");
 
   noStroke();
+
   //ellipse(pos.x, pos.y, 1)
 
   switch (currState) {
@@ -438,6 +450,7 @@ function draw() {
   doneEase.update(deltaTime);
   ballEase.update(deltaTime);
   startEase.update(deltaTime);
+
   // return;
   // background('black')
   // const thickness = 20

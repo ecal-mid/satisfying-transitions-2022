@@ -222,6 +222,8 @@ function mouseClicked() {
 
 function draw() {
   background("white");
+  // const isVisible = window.frameElement?.className === "selected";
+  // if(!isVisible) return clear();
 
   switch (currState) {
     case states.PYRAMID:

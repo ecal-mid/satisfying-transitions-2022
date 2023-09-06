@@ -35,15 +35,15 @@ class Apple {
 
         if (!snakecroc.isPlaying()) {
           snakecroc.play();
-        
-   
-          break;
-          }
+
+
+        }
         // console.log("SCRUNCH");
-        // break;
+        break;
+      // break;
       case pStates.ALIGN:
-        // this.x = this.target2.x;
-        // this.y = this.target2.y;
+        this.x = this.target2.x;
+        this.y = this.target2.y;
         break;
     }
   }
@@ -51,11 +51,6 @@ class Apple {
   draw() {
     push();
     fill(this.col);
-
-    let diameter = this.diameter * pow(startEase.value, this.variation);
-    ellipse(this.x, this.y, diameter, diameter / ratio);
-    pop();
-
     switch (this.state) {
       case pStates.IDLE:
         if (this.progress - 0.5 <= progress) this.changeState(pStates.EATEN);
@@ -68,5 +63,11 @@ class Apple {
         this.col = lerpColor(this.col, color("black"), pow(ballEase.value, 3));
         break;
     }
+
+    let diameter = this.diameter * pow(startEase.value, this.variation);
+
+    ellipse(this.x, this.y, diameter, diameter / ratio);
+    pop();
+
   }
 }

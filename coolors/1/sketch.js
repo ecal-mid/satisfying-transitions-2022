@@ -1,5 +1,6 @@
 "use strict";
 
+const hitDiameter = 80;
 let progress = 0;
 let started = false;
 
@@ -25,8 +26,9 @@ let states = {
   MOVE: 2,
   // ARC: 3,
 };
-
 let currState = states.RAINBOW;
+// let currState = states.MOVE;
+
 let completeCircles = 0;
 let circles = [];
 const dotDiameter = 30;
@@ -85,22 +87,22 @@ function setup() {
   });
 
   ease = new Easing({
-    duration: 2000,
+    duration: 400,
     from: 1,
     to: 180,
-    easing: EASINGS.easeOutElastic,
+    easing: EASINGS.easeInOutCubic,
   });
 
   easeScale = new Easing({
-    duration: 3000,
-    from: 1,
-    to: 1.2,
-    easing: EASINGS.easeOutElastic,
+    duration: 1200,
+    from: 0,
+    to: 1,
+    easing: EASINGS.easeInOutCubic,
   });
 
-  ease.onEnd = function () {
-    console.log("ended!");
-  };
+  // ease.onEnd = function () {
+  //   console.log("ended!");
+  // };
 
   // ease.onUpdate = function (value) {
   //   // console.log(value);‚
@@ -120,6 +122,8 @@ function windowResized() {
 }
 
 function draw() {
+  // const isVisible = window.frameElement?.className === "selected";
+  // if(!isVisible) return clear();
   background(255);
   fill(0);
   noStroke();
@@ -131,6 +135,11 @@ function draw() {
   const centerY = height / 2;
   const objSize = sceneSize / 3;
 
+
+  // fill('red')
+  // arc(centerX, centerY * 0.5, sceneSize, sceneSize, 0, 180)
+
+
   switch (currState) {
     case states.RAINBOW:
       push();
@@ -140,7 +149,6 @@ function draw() {
       circles[2].draw(0, 0);
       circles[3].draw(objSize / 2, 0);
       circles[4].draw(objSize, 0, 1);
-
       pop();
       break;
 
@@ -155,31 +163,76 @@ function draw() {
       circles[4].draw(objSize, 0, 1);
       pop();
 
-      arc(0 + 30, 0, sceneSize / 1.2, sceneSize / 1.2, 180, 360);
+      // arc(0 + 30, 0, sceneSize / 1.2, sceneSize / 1.2, 180, 360);
 
       onFinishedBlack();
       break;
 
     case states.MOVE:
       // clear();
-      const value = ease.update(deltaTime);
-      const gros = easeScale.update(deltaTime);
+      const amt = easeScale.update(deltaTime);
+      const opacity = ease.update(deltaTime);
 
-      translate(width / 2, height / 2);
-      rotate(value);
-      translate(-36, 280);
-      scale(gros);
+      push()
+      fill('black')
+      // // console.log(easeScale);
+      // console.log(gros);
+
+      const rot = lerp(0, 180, amt)
+      translate(centerX, centerY);
+      rotate(rot);
+      translate(0, lerp(0, centerY, amt))
+
+      const posX = lerp(hitDiameter / 2, 0, amt)
+      const posY = lerp(0, -centerY * 0.5, amt)
+
+      const size = lerp(-objSize * 2 - hitDiameter * 2, -sceneSize, amt)
+      // console.log(size);
+
+      // arc(0, -centerY * 0.5, sceneSize, sceneSize, 0, 180)
+      arc(posX, posY, size, size, 180, 0)
+
+      pop()
+
+      push()
+      translate(centerX, centerY);
+      drawingContext.globalAlpha = opacity;
+      circles[2].draw(0, 0);
+
+      drawingContext.globalAlpha = opacity ** 2;
+      circles[3].draw(objSize / 2, 0);
+
+      drawingContext.globalAlpha = opacity ** 4;
+      circles[1].draw(-objSize / 2, 0);
+
+      drawingContext.globalAlpha = opacity ** 6;
+      circles[4].draw(objSize, 0, 1);
+
+      drawingContext.globalAlpha = opacity ** 8;
+      circles[0].draw(-objSize, 0);
+
+      drawingContext.globalAlpha = 1;
+
+      pop()
+      // rotate(value);
+      // translate(-36, 280);
+      // scale(gros);
 
       calcFill();
 
-      easeFill.start({
-        to: fillY,
-      });
-      console.log("yee");
+      // easeFill.start({
+      //   to: fillY,
+      // });
+      // console.log("yee");
 
-      arc(0 + 30, 0, sceneSize / 1.2, sceneSize / 1.2, 180, 360);
+      // arc(0 + 30, 0, sceneSize / 1.2, sceneSize / 1.2, 180, 360);
 
       started = true;
+
+      if (easeScale.time > 1) {
+        window.parent.postMessage("finished", "*");
+        noLoop();
+      }
       break;
 
     // case states.ARC:
@@ -187,12 +240,8 @@ function draw() {
     //   console.log("arc dessiner");
     //   break;
   }
-  if (started) progress += deltaTime / 1000;
+  // if (started) progress += deltaTime / 1000;
 
-  if (progress >= 1) {
-    window.parent.postMessage("finished", "*");
-    noLoop();
-  }
 }
 
 function onCompleteCircle() {
@@ -214,13 +263,20 @@ function onFinishedBlack() {
 
   // setTimeout(() => {
   ease.start({
-    to: to,
+    from: 1,
+    to: 0,
   });
 
-  easeScale.start({
-    toto: toto,
-  });
-  // }, 1000);
+  ease.onEnd = () => {
+    easeScale.start({
+      toto: 1,
+    });
+  }
+
+  // }, 100);
+
+
+  // console.log(easeScale);
 
   console.log("black");
 }

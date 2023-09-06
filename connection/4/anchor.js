@@ -1,12 +1,12 @@
 class Anchor {
-  constructor(x, y, radius) {
+  constructor(x, y, diameter) {
     this.dragging = false; // Is the object being dragged?
     this.rollover = false; // Is the mouse over the ellipse?
     this.blackHoled = false
     this.x = x;
     this.y = y;
 
-    this.radius = radius;
+    this.diameter = diameter;
     // this.h = h;
     this.offsetX = 0;
     this.offsetY = 0;
@@ -15,10 +15,10 @@ class Anchor {
   over() {
     // Is mouse over object
     if (
-      mouseX > this.x - this.radius &&
-      mouseX < this.x + this.radius &&
-      mouseY > this.y - this.radius &&
-      mouseY < this.y + this.radius
+      mouseX > this.x - this.diameter &&
+      mouseX < this.x + this.diameter &&
+      mouseY > this.y - this.diameter &&
+      mouseY < this.y + this.diameter
     ) {
       this.rollover = true;
     } else {
@@ -65,23 +65,23 @@ class Anchor {
 
       hasReached()
     }
-    // circle(this.x, this.y, this.radius);
+    // circle(this.x, this.y, this.diameter);
     pop();
   }
 
   pressed() {
     // Did I click on the rectangle?
-    if (
-      mouseX > this.x - this.radius &&
-      mouseX < this.x + this.radius &&
-      mouseY > this.y - this.radius &&
-      mouseY < this.y + this.radius
-    ) {
+    if (this.collides()) {
       this.dragging = true;
       // If so, keep track of relative location of click to corner of rectangle
       this.offsetX = this.x - mouseX;
       this.offsetY = this.y - mouseY;
     }
+  }
+
+  collides() {
+    const d = dist(this.x, this.y, mouseX, mouseY);
+    return d <= this.diameter * 1.5
   }
 
   released() {

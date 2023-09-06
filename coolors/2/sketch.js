@@ -33,7 +33,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   angleMode(DEGREES);
-
+  // pixelDensity(1);
   sound = loadSound("water.mp3");
   boing = loadSound("boing.mp3");
 
@@ -94,6 +94,8 @@ function changeState(newState) {
 }
 
 function draw() {
+  // const isVisible = window.frameElement?.className === "selected";
+  // if(!isVisible) return clear();
   background(255);
 
   // bottomWave();
@@ -123,7 +125,9 @@ function draw() {
 
       waterdrops.forEach((waterdrop) => waterdrop.draw());
 
-      drawingContext.filter = "url(#metaball)";
+      // var isVisible = !!window.frameElement;
+      const isVisible = window.frameElement?.className === "selected";
+      if(isVisible) drawingContext.filter = "url(#metaball)";
       image(layer, 0, 0);
       drawingContext.filter = "none";
       //   drawArc();

@@ -1,6 +1,7 @@
 const duration = 300; // ms
 let activeEllipse = false;
 
+
 class RainbowSlider {
   constructor({ color, way, sound }) {
     this.t = 0;
@@ -9,6 +10,7 @@ class RainbowSlider {
     this.way = way;
     this.angle = 0; // 0 -180
     this.complete = false;
+    // this.complete = false;
     this.sound = sound;
   }
 
@@ -16,7 +18,6 @@ class RainbowSlider {
     push();
     fill(0);
 
-    const hitDiameter = 80;
     const arcDim = x * 2 - hitDiameter;
     const offset = arcDim / 2;
     const mappedMouse = screenToWorld(drawingContext, mouseX, mouseY);
